@@ -1,0 +1,20 @@
+# nixpacks.toml
+# Configuration for Railway deployment using Nixpacks
+
+[phases.setup]
+# Install required system packages for Prisma
+aptPkgs = ["openssl", "libssl-dev", "ca-certificates"]
+
+[phases.install]
+# Install Node.js dependencies including dev dependencies for building
+cmds = ["npm ci --production=false"]
+
+[phases.build]
+# Build steps including Prisma client generation and TypeScript compilation
+cmds = [
+  "npx prisma generate",
+  "npm run build"
+]
+
+[start]
+# Start command is defined in railway.json
