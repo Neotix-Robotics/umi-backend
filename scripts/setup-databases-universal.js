@@ -99,23 +99,33 @@ async function createAppUser(config) {
   log.warning(`Creating application user: ${DEFAULT_CONFIG.appUser}...`);
   
   try {
-    // Drop user if exists (cascade)
-    await executeSql(
-      `DROP USER IF EXISTS ${DEFAULT_CONFIG.appUser}`,
+    // Check if user exists
+    const checkUserResult = await executeSql(
+      `SELECT 1 FROM pg_user WHERE usename = '${DEFAULT_CONFIG.appUser}'`,
       'postgres',
       config
-    ).catch(() => {}); // Ignore if doesn't exist
+    ).catch(() => null);
     
-    // Create user
-    await executeSql(
-      `CREATE USER ${DEFAULT_CONFIG.appUser} WITH PASSWORD '${DEFAULT_CONFIG.appPassword}'`,
-      'postgres',
-      config
-    );
-    
-    log.success('Application user created');
+    if (checkUserResult) {
+      log.warning(`User ${DEFAULT_CONFIG.appUser} already exists, updating password...`);
+      // Update password for existing user
+      await executeSql(
+        `ALTER USER ${DEFAULT_CONFIG.appUser} WITH PASSWORD '${DEFAULT_CONFIG.appPassword}'`,
+        'postgres',
+        config
+      );
+      log.success('Application user password updated');
+    } else {
+      // Create user if doesn't exist
+      await executeSql(
+        `CREATE USER ${DEFAULT_CONFIG.appUser} WITH PASSWORD '${DEFAULT_CONFIG.appPassword}'`,
+        'postgres',
+        config
+      );
+      log.success('Application user created');
+    }
   } catch (error) {
-    log.error(`Failed to create user: ${error.message}`);
+    log.error(`Failed to create/update user: ${error.message}`);
     throw error;
   }
 }
