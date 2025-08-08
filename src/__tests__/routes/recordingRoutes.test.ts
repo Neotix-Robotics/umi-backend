@@ -264,11 +264,9 @@ describe('Recording Routes', () => {
       
       await createRecordingSession(assignment.id, subtasks[0].id, {
         iterationNumber: 1,
-        localSessionId: 1,
       });
       await createRecordingSession(assignment.id, subtasks[1].id, {
         iterationNumber: 1,
-        localSessionId: 2,
       });
 
       const response = await request(app)

@@ -13,7 +13,7 @@ interface PhaseData {
   actualDuration: number;
 }
 
-export const createMapping = async (req: AuthRequest, res: Response): Promise<void> => {
+export const createMapping = async (req: AuthRequest, res: Response): Promise<any> => {
   const userId = req.user!.id;
   const { 
     cameraSerials, 
@@ -73,7 +73,7 @@ export const createMapping = async (req: AuthRequest, res: Response): Promise<vo
   res.json(mapping);
 };
 
-export const getValidMappings = async (req: AuthRequest, res: Response): Promise<void> => {
+export const getValidMappings = async (req: AuthRequest, res: Response) => {
   const userId = req.user!.id;
   
   const mappings = await prisma.mappingSession.findMany({
@@ -103,7 +103,7 @@ export const getValidMappings = async (req: AuthRequest, res: Response): Promise
   res.json({ mappings: mappingsWithExpiration });
 };
 
-export const validateMapping = async (req: AuthRequest, res: Response): Promise<void> => {
+export const validateMapping = async (req: AuthRequest, res: Response): Promise<any> => {
   const userId = req.user!.id;
   const { mappingId } = req.body;
 

@@ -5,7 +5,7 @@ import { AuthRequest } from '../middleware/authMiddleware';
 import { prisma } from '../utils/prisma';
 
 export const createTask = asyncHandler(async (req: AuthRequest, res: Response) => {
-  const { title, description, demoVideoUrl, requiredIterations, subtasks } = req.body;
+  const { title, description, demoVideoUrl, requiredIterations, requiredCameras, subtasks } = req.body;
   
   if (!req.user) {
     throw new AppError('Authentication required', 401);
@@ -17,6 +17,7 @@ export const createTask = asyncHandler(async (req: AuthRequest, res: Response) =
       description,
       demoVideoUrl,
       requiredIterations,
+      requiredCameras: requiredCameras || 1,
       createdBy: req.user.id
     },
     subtasks

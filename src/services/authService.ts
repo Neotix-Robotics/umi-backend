@@ -1,5 +1,4 @@
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
 import { config } from '../config';
 import { prisma } from '../utils/prisma';
 import { AppError } from '../middleware/errorHandler';
@@ -66,7 +65,7 @@ export class AuthService {
   }
 
   async generateTokens(
-    user: User,
+    user: User | Omit<User, 'passwordHash'>,
     userAgent?: string,
     ipAddress?: string
   ): Promise<{ accessToken: string; refreshToken: string }> {

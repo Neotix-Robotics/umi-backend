@@ -9,7 +9,7 @@ import {
   revokeSession,
   revokeAllSessions
 } from '../controllers/authController';
-import { requireAuth, requireAdmin } from '../middleware/authMiddleware';
+import { requireAuth } from '../middleware/authMiddleware';
 import { validate, authValidators } from '../utils/validators';
 
 const router = Router();

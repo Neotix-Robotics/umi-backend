@@ -1,5 +1,5 @@
-import { Router } from 'express';
-import { requireAuth } from '../middleware/authMiddleware';
+import { Router, Response } from 'express';
+import { requireAuth, AuthRequest } from '../middleware/authMiddleware';
 import { prisma } from '../utils/prisma';
 import { AppError, asyncHandler } from '../middleware/errorHandler';
 
@@ -8,7 +8,7 @@ const router = Router();
 /**
  * Get subtask analytics for a recording session
  */
-router.get('/sessions/:sessionId/analytics', requireAuth, asyncHandler(async (req, res) => {
+router.get('/sessions/:sessionId/analytics', requireAuth, asyncHandler(async (req: AuthRequest, res: Response) => {
   const { sessionId } = req.params;
   
   // Verify session exists and user has access
@@ -100,7 +100,7 @@ router.get('/sessions/:sessionId/analytics', requireAuth, asyncHandler(async (re
 /**
  * Get timeline of events for a recording session
  */
-router.get('/sessions/:sessionId/timeline', requireAuth, asyncHandler(async (req, res) => {
+router.get('/sessions/:sessionId/timeline', requireAuth, asyncHandler(async (req: AuthRequest, res: Response) => {
   const { sessionId } = req.params;
   
   // Verify session exists and user has access
@@ -157,7 +157,7 @@ router.get('/sessions/:sessionId/timeline', requireAuth, asyncHandler(async (req
 /**
  * Get aggregated analytics across multiple sessions
  */
-router.get('/assignments/:assignmentId/analytics', requireAuth, asyncHandler(async (req, res) => {
+router.get('/assignments/:assignmentId/analytics', requireAuth, asyncHandler(async (req: AuthRequest, res: Response) => {
   const { assignmentId } = req.params;
   
   // Verify assignment exists and user has access

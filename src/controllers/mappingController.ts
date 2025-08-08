@@ -33,7 +33,7 @@ const PHASE_CONFIGS = [
   }
 ];
 
-export const startMapping = async (req: AuthRequest, res: Response): Promise<void> => {
+export const startMapping = async (req: AuthRequest, res: Response): Promise<any> => {
   const userId = req.user!.id;
   const { cameraSerials } = req.body;
 
@@ -98,7 +98,7 @@ export const startMapping = async (req: AuthRequest, res: Response): Promise<voi
   });
 };
 
-export const updatePhase = async (req: AuthRequest, res: Response): Promise<void> => {
+export const updatePhase = async (req: AuthRequest, res: Response): Promise<any> => {
   const userId = req.user!.id;
   const { mappingId, phaseType } = req.params;
   const { action, environmentName, metadata } = req.body; // 'start' or 'complete', optional environmentName and metadata
@@ -221,7 +221,7 @@ export const updatePhase = async (req: AuthRequest, res: Response): Promise<void
   }
 };
 
-export const completeMapping = async (req: AuthRequest, res: Response): Promise<void> => {
+export const completeMapping = async (req: AuthRequest, res: Response): Promise<any> => {
   const userId = req.user!.id;
   const { mappingId } = req.params;
   const { environmentName } = req.body;
@@ -266,7 +266,7 @@ export const completeMapping = async (req: AuthRequest, res: Response): Promise<
   res.json(updatedMapping);
 };
 
-export const extendMapping = async (req: AuthRequest, res: Response): Promise<void> => {
+export const extendMapping = async (req: AuthRequest, res: Response): Promise<any> => {
   const userId = req.user!.id;
   const { mappingId } = req.params;
 
@@ -305,7 +305,7 @@ export const extendMapping = async (req: AuthRequest, res: Response): Promise<vo
   });
 };
 
-export const getActiveMapping = async (req: AuthRequest, res: Response): Promise<void> => {
+export const getActiveMapping = async (req: AuthRequest, res: Response): Promise<any> => {
   const userId = req.user!.id;
 
   const mapping = await prisma.mappingSession.findFirst({
@@ -381,7 +381,7 @@ export const getValidMappings = async (req: AuthRequest, res: Response): Promise
   res.json({ mappings: mappingsWithExpiration });
 };
 
-export const validateMapping = async (req: AuthRequest, res: Response): Promise<void> => {
+export const validateMapping = async (req: AuthRequest, res: Response): Promise<any> => {
   const userId = req.user!.id;
   const { mappingId } = req.body;
 

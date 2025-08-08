@@ -1,11 +1,20 @@
-import { Router } from 'express';
-import { requireAuth } from '../middleware/authMiddleware';
+import { Router, Response } from 'express';
+import { requireAuth, AuthRequest } from '../middleware/authMiddleware';
 import { prisma } from '../utils/prisma';
 import { validate } from '../utils/validators';
 import Joi from 'joi';
 import { MappingStatus } from '@prisma/client';
 
 const router = Router();
+
+interface SubtaskTiming {
+  subtaskId: string;
+  startedAt?: string | null;
+  completedAt?: string | null;
+  duration?: number | null;
+  orderStarted?: number | null;
+  orderCompleted?: number | null;
+}
 
 // Validation schema for task recording
 const taskRecordingSchema = Joi.object({
@@ -39,7 +48,7 @@ const taskRecordingSchema = Joi.object({
  * Simple endpoint to save task recording data
  * Receives all data at once after recording is complete
  */
-router.post('/task-recordings', requireAuth, validate(taskRecordingSchema), async (req, res, next) => {
+router.post('/task-recordings', requireAuth, validate(taskRecordingSchema), async (req: AuthRequest, res: Response, next): Promise<any> => {
   try {
     const {
       taskAssignmentId,
@@ -98,7 +107,7 @@ router.post('/task-recordings', requireAuth, validate(taskRecordingSchema), asyn
 
     // Validate that completed subtasks belong to this task
     const validSubtaskIds = assignment.task.subtasks.map(s => s.id);
-    const invalidSubtasks = completedSubtasks.filter(id => !validSubtaskIds.includes(id));
+    const invalidSubtasks = completedSubtasks.filter((id: string) => !validSubtaskIds.includes(id));
     
     if (invalidSubtasks.length > 0) {
       return res.status(400).json({ 
@@ -163,8 +172,8 @@ router.post('/task-recordings', requireAuth, validate(taskRecordingSchema), asyn
     });
 
     // Create subtask records with timing data
-    const subtaskTimingsMap = new Map(
-      req.body.subtaskTimings?.map((t: any) => [t.subtaskId, t]) || []
+    const subtaskTimingsMap = new Map<string, SubtaskTiming>(
+      req.body.subtaskTimings?.map((t: SubtaskTiming) => [t.subtaskId, t]) || []
     );
     
     for (const subtaskId of completedSubtasks) {

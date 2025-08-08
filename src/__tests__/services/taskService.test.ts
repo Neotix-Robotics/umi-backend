@@ -12,6 +12,7 @@ describe('Task Service', () => {
         title: 'New Task',
         description: 'Task description',
         requiredIterations: 5,
+        requiredCameras: 2,
         createdBy: admin.id
       };
 
@@ -36,6 +37,7 @@ describe('Task Service', () => {
         {
           title: 'Task without subtasks',
           requiredIterations: 1,
+          requiredCameras: 1,
           createdBy: admin.id
         },
         []
@@ -51,6 +53,7 @@ describe('Task Service', () => {
         {
           title: 'Minimal Task',
           requiredIterations: 1,
+          requiredCameras: 1,
           createdBy: admin.id
         },
         []
@@ -237,7 +240,7 @@ describe('Task Service', () => {
     it('should calculate progress correctly', async () => {
       const admin = await createAdminUser();
       const collector = await createTestUser('collector');
-      const { task, subtasks } = await createTaskWithSubtasks(admin.id, 3);
+      const { task } = await createTaskWithSubtasks(admin.id, 3);
       const assignment = await createTaskAssignment(task.id, collector.id, admin.id);
 
       // Create sessions for 2 out of 3 subtasks
@@ -245,16 +248,12 @@ describe('Task Service', () => {
         data: [
           {
             taskAssignmentId: assignment.id,
-            subtaskId: subtasks[0].id,
-            localSessionId: 1,
             iterationNumber: 1,
             cameraCount: 2,
             status: 'completed'
           },
           {
             taskAssignmentId: assignment.id,
-            subtaskId: subtasks[1].id,
-            localSessionId: 2,
             iterationNumber: 1,
             cameraCount: 2,
             status: 'completed'
@@ -272,7 +271,7 @@ describe('Task Service', () => {
       const admin = await createAdminUser();
       const collector = await createTestUser('collector');
       const task = await createTask(admin.id, { requiredIterations: 3 });
-      const subtask = await prisma.subtask.create({
+      await prisma.subtask.create({
         data: { taskId: task.id, title: 'Single subtask', orderIndex: 0 }
       });
       const assignment = await createTaskAssignment(task.id, collector.id, admin.id);
@@ -282,8 +281,6 @@ describe('Task Service', () => {
         await prisma.recordingSession.create({
           data: {
             taskAssignmentId: assignment.id,
-            subtaskId: subtask.id,
-            localSessionId: i,
             iterationNumber: i,
             cameraCount: 2,
             status: 'completed'

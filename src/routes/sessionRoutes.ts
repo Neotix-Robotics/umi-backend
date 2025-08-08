@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, Response } from 'express';
 import { requireAuth, AuthRequest } from '../middleware/authMiddleware';
 import { asyncHandler } from '../middleware/errorHandler';
 import { prisma } from '../utils/prisma';
@@ -6,7 +6,7 @@ import { prisma } from '../utils/prisma';
 const router = Router();
 
 // Get all sessions for the current user with metadata and timeline
-router.get('/sessions', requireAuth, asyncHandler(async (req: AuthRequest, res) => {
+router.get('/sessions', requireAuth, asyncHandler(async (req: AuthRequest, res: Response) => {
   const userId = req.user!.id;
   
   // Get all sessions for tasks assigned to this user
@@ -115,7 +115,7 @@ router.get('/sessions', requireAuth, asyncHandler(async (req: AuthRequest, res) 
 }));
 
 // Get detailed session with full timeline
-router.get('/sessions/:sessionId', requireAuth, asyncHandler(async (req: AuthRequest, res) => {
+router.get('/sessions/:sessionId', requireAuth, asyncHandler(async (req: AuthRequest, res: Response): Promise<any> => {
   const { sessionId } = req.params;
   const userId = req.user!.id;
   
@@ -242,7 +242,7 @@ router.get('/sessions/:sessionId', requireAuth, asyncHandler(async (req: AuthReq
 }));
 
 // Delete a session
-router.delete('/sessions/:sessionId', requireAuth, asyncHandler(async (req: AuthRequest, res) => {
+router.delete('/sessions/:sessionId', requireAuth, asyncHandler(async (req: AuthRequest, res: Response): Promise<any> => {
   const { sessionId } = req.params;
   const userId = req.user!.id;
   

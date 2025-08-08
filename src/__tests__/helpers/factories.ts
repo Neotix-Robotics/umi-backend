@@ -53,14 +53,12 @@ export async function createTaskAssignment(
 
 export async function createRecordingSession(
   taskAssignmentId: string,
-  subtaskId: string,
+  _subtaskId: string,
   data?: Partial<RecordingSession>
 ): Promise<RecordingSession> {
   return prisma.recordingSession.create({
     data: {
       taskAssignmentId,
-      subtaskId,
-      localSessionId: data?.localSessionId || 1,
       iterationNumber: data?.iterationNumber || 1,
       cameraCount: data?.cameraCount || 2,
       status: data?.status || 'started',

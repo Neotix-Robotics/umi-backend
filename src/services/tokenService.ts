@@ -20,7 +20,6 @@ interface RefreshTokenData {
 }
 
 export class TokenService {
-  private readonly ACCESS_TOKEN_PREFIX = 'access_token:';
   private readonly REFRESH_TOKEN_PREFIX = 'refresh_token:';
   private readonly TOKEN_FAMILY_PREFIX = 'token_family:';
   private readonly USER_SESSIONS_PREFIX = 'user_sessions:';
@@ -46,12 +45,12 @@ export class TokenService {
 
     const accessToken = jwt.sign(payload, config.jwt.secret, {
       expiresIn: config.jwt.expiresIn,
-    });
+    } as any);
 
     const refreshToken = jwt.sign(
       { ...payload, type: 'refresh' },
       config.jwt.refreshSecret,
-      { expiresIn: config.jwt.refreshExpiresIn }
+      { expiresIn: config.jwt.refreshExpiresIn } as any
     );
 
     // Store refresh token data in Redis
@@ -126,12 +125,12 @@ export class TokenService {
 
       const accessToken = jwt.sign(payload, config.jwt.secret, {
         expiresIn: config.jwt.expiresIn,
-      });
+      } as any);
 
       const refreshToken = jwt.sign(
         { ...payload, type: 'refresh' },
         config.jwt.refreshSecret,
-        { expiresIn: config.jwt.refreshExpiresIn }
+        { expiresIn: config.jwt.refreshExpiresIn } as any
       );
 
       // Store new refresh token

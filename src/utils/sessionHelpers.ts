@@ -1,8 +1,10 @@
-import { RecordingSession, Subtask } from '@prisma/client';
+import { RecordingSession, Subtask, SubtaskRecord } from '@prisma/client';
 
 // Helper function to check if all required sessions are completed
+// Note: This function would need to be rewritten to work with SubtaskRecords
+// since RecordingSession doesn't have a direct subtaskId field
 export const checkAllSessionsCompleted = (
-  sessions: RecordingSession[],
+  sessions: (RecordingSession & { subtaskRecords: SubtaskRecord[] })[],
   subtasks: Subtask[],
   requiredIterations: number
 ): { isComplete: boolean; missingCombinations: Array<{ subtaskId: string; iteration: number }> } => {
@@ -11,8 +13,10 @@ export const checkAllSessionsCompleted = (
   // Track all completed subtask/iteration combinations
   sessions.forEach(session => {
     if (session.status === 'completed') {
-      const key = `${session.subtaskId}-${session.iterationNumber}`;
-      completedCombinations.add(key);
+      session.subtaskRecords.forEach(record => {
+        const key = `${record.subtaskId}-${record.iterationNumber}`;
+        completedCombinations.add(key);
+      });
     }
   });
   
