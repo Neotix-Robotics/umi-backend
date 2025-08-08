@@ -7,7 +7,7 @@ aptPkgs = ["openssl", "libssl-dev", "ca-certificates"]
 
 [phases.install]
 # Install Node.js dependencies including dev dependencies for building
-cmds = ["npm ci --production=false"]
+cmds = ["rm -rf node_modules .npm /root/.npm", "npm cache clean --force", "npm ci"]
 
 [phases.build]
 # Build steps including Prisma client generation and TypeScript compilation
